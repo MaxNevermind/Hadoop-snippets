@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *  Helper class for collecting Yarn apps performance(vcore-seconds/Mb-seconds), May help in the case of a big number of apps.
+ *  Helper class for collecting Yarn apps performance(vcore-seconds/Mb-seconds) metrics, May help in the case of a big number of apps.
  */
 
 public class YarnAppMetricsCollector {
