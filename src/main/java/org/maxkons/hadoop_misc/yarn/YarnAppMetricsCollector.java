@@ -13,7 +13,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class YarnAppMetricsFinder {
+/**
+ *  Helper class for collecting Yarn apps performance(vcore-seconds/Mb-seconds), May help in the case of a big number of apps.
+ */
+
+public class YarnAppMetricsCollector {
 
     public static final RestTemplate REST_TEMPLATE = new RestTemplate();
 
