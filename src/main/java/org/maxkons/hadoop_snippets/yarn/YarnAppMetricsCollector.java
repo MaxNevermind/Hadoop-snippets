@@ -29,7 +29,7 @@ public class YarnAppMetricsCollector {
 
     private static final RestTemplate REST_TEMPLATE = new RestTemplate();
 
-    public enum ADDITIONAL_FILTERS {APP_NAME};
+    public enum ADDITIONAL_FILTERS {APP_NAME}
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Example usage
 
@@ -45,7 +45,7 @@ public class YarnAppMetricsCollector {
         MultiValueMap<ADDITIONAL_FILTERS, String> appFiltersAdditional = new LinkedMultiValueMap<>();
         appFiltersAdditional.put(ADDITIONAL_FILTERS.APP_NAME, ImmutableList.of("appName"));
 
-        new YarnAppMetricsCollector(appFilters, appFiltersAdditional).printMetricsToConsole();
+        new YarnAppMetricsCollector(appFilters, appFiltersAdditional).requestMetricsAndPrintToConsole();
     }
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CONSTRUCTORS
@@ -60,7 +60,7 @@ public class YarnAppMetricsCollector {
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PUBLIC MEMBERS
 
-    public void printMetricsToConsole() {
+    public void requestMetricsAndPrintToConsole() {
         List<AppRespHolder> appList = makeYarnHttpCall();
         appList = applyAdditionalFilters(appList);
         long totalMemorySeconds = 0L;

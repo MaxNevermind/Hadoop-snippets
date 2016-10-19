@@ -34,6 +34,20 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.parquet</groupId>
+			<artifactId>parquet-avro</artifactId>
+			<version>1.8.1</version>
+			<scope>${scope}</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.parquet</groupId>
+			<artifactId>parquet-hadoop</artifactId>
+			<version>1.8.1</version>
+			<scope>${scope}</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
