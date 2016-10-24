@@ -1,0 +1,28 @@
+{
+  "type" : "record",
+  "name" : "test_schema",
+  "namespace" : "MY_NAMESPACE",
+  "fields" : [ {
+    "name" : "requiredField1",
+    "type" : "string"
+  }, {
+    "name" : "requiredField2",
+    "type" : "string"
+  }, {
+    "name" : "childRecord",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "columns",
+      "fields" : [ {
+        "name" : "ID",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "c1",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
+    } ],
+    "default" : null
+  } ]
+}

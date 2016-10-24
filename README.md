@@ -8,7 +8,10 @@ This project contains helper and misculeneus classes you may need in your daily 
 
 * [ParquetReaderWriterWithAvro] - Example of reading writing Parquet from java without BigData tools.
 
+* [AvroWriter] - Example of reading writing an Avro file from Java.
+
 
 
    [YarnAppMetricsCollector]: <https://github.com/MaxNevermind/Hadoop-snippets/blob/master/src/main/java/org/maxkons/hadoop_snippets/yarn/YarnAppMetricsCollector.java>
    [ParquetReaderWriterWithAvro]: <https://github.com/MaxNevermind/Hadoop-snippets/blob/master/src/main/java/org/maxkons/hadoop_snippets/parquet/ParquetReaderWriterWithAvro.java>
+   [AvroWriter]: <https://github.com/MaxNevermind/Hadoop-snippets/blob/master/src/main/java/org/maxkons/hadoop_snippets/avro/AvroWriter.java>

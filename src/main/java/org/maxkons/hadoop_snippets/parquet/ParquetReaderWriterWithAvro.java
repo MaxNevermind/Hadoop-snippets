@@ -22,9 +22,10 @@ import java.util.List;
 public class ParquetReaderWriterWithAvro {
 
     public static final Schema schema;
+    public static final Path OUT_PATH = new Path("/home/max/Downloads/sample.parquet");
 
     static {
-        try (InputStream inStream = ParquetReaderWriterWithAvro.class.getResourceAsStream("/sample.avsc")) {
+        try (InputStream inStream = ParquetReaderWriterWithAvro.class.getResourceAsStream("/org/maxkons/hadoop_snippets/parquet/avroToParquet.avsc")) {
             schema = new Schema.Parser().parse(IOUtils.toString(inStream, "UTF-8"));
         } catch (IOException e) {
             throw new RuntimeException("Can't read schema file", e);
@@ -45,8 +46,8 @@ public class ParquetReaderWriterWithAvro {
         sampleData.add(record);
 
         ParquetReaderWriterWithAvro writerReader = new ParquetReaderWriterWithAvro();
-        writerReader.writeToParquet(sampleData, new Path("/home/max/Downloads/sample.parquet"));
-        writerReader.readFromParquet(new Path("/home/max/Downloads/sample.parquet"));
+        writerReader.writeToParquet(sampleData, OUT_PATH);
+        writerReader.readFromParquet(OUT_PATH);
     }
 
     @SuppressWarnings("unchecked")
