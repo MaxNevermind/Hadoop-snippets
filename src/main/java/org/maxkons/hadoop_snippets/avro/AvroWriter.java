@@ -10,43 +10,48 @@ import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+    Example of writing Avro in java without BigData tools.
+ */
 public class AvroWriter {
 
-    public static final Schema schema;
-    public static final String OUT_FILE = "/home/max/Downloads/sample.avro";
+    private static final Logger LOGGER = LoggerFactory.getLogger(AvroWriter.class);
+
+    private static final Schema SCHEMA;
+    private static final String SCHEMA_LOCATION = "/org/maxkons/hadoop_snippets/avro/sample.avsc";
+    private static final Path OUT_PATH = new Path("/home/max/Downloads/sample.avro");
 
     static {
-        try (InputStream inStream = AvroWriter.class.getResourceAsStream("/org/maxkons/hadoop_snippets/avro/sample.avsc")) {
-            schema = new Schema.Parser().parse(IOUtils.toString(inStream, "UTF-8"));
+        try (InputStream inStream = AvroWriter.class.getResourceAsStream(SCHEMA_LOCATION)) {
+            SCHEMA = new Schema.Parser().parse(IOUtils.toString(inStream, "UTF-8"));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read schema file", e);
+            LOGGER.error("Can't read SCHEMA file from {}", SCHEMA_LOCATION);
+            throw new RuntimeException("Can't read SCHEMA file from " + SCHEMA_LOCATION, e);
         }
     }
 
     public static void main(String[] args) throws IOException {
         FileSystem fileSystem = FileSystem.newInstance(new Configuration());
-        Path pathOut = new Path(OUT_FILE);
-        DataFileWriter<GenericRecord> genericRecordDataFileWriter = new DataFileWriter(new GenericDatumWriter<>()).create(schema, fileSystem.create(pathOut));
-
-        List<GenericData.Record> records = getData();
-        for (GenericData.Record record: records) {
-            genericRecordDataFileWriter.append(record);
+        try (DataFileWriter<GenericRecord> genericRecordDataFileWriter = new DataFileWriter(new GenericDatumWriter<>()).create(SCHEMA, fileSystem.create(OUT_PATH))) {
+            List<GenericData.Record> records = getData();
+            for (GenericData.Record record: records) {
+                genericRecordDataFileWriter.append(record);
+            }
         }
-
-        genericRecordDataFileWriter.close();
-
     }
 
     public static List<GenericData.Record> getData() {
         List<GenericData.Record> records = new ArrayList<>();
 
-        GenericData.Record parentRecord = new GenericData.Record(schema);
+        GenericData.Record parentRecord = new GenericData.Record(SCHEMA);
         parentRecord.put("requiredField1", "I");
         parentRecord.put("requiredField2", "2016-06-28 11:54:55.010163");
 
@@ -57,7 +62,7 @@ public class AvroWriter {
         parentRecord.put("childRecord", childRecord);
         records.add(parentRecord);
 
-        parentRecord = new GenericData.Record(schema);
+        parentRecord = new GenericData.Record(SCHEMA);
         parentRecord.put("requiredField1", "U");
         parentRecord.put("requiredField2", "2016-06-28 11:54:55.010163");
 

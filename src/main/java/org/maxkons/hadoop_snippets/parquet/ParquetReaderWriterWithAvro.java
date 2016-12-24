@@ -10,6 +10,8 @@ import org.apache.parquet.avro.AvroParquetWriter;
 import org.apache.parquet.hadoop.ParquetReader;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,30 +19,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
-    Example of reading writing Parquet from java without BigData tools.
+    Example of reading writing Parquet in java without BigData tools.
  */
 public class ParquetReaderWriterWithAvro {
 
-    public static final Schema schema;
-    public static final Path OUT_PATH = new Path("/home/max/Downloads/sample.parquet");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParquetReaderWriterWithAvro.class);
+
+    private static final Schema SCHEMA;
+    private static final String SCHEMA_LOCATION = "/org/maxkons/hadoop_snippets/parquet/avroToParquet.avsc";
+    private static final Path OUT_PATH = new Path("/home/max/Downloads/sample.parquet");
 
     static {
-        try (InputStream inStream = ParquetReaderWriterWithAvro.class.getResourceAsStream("/org/maxkons/hadoop_snippets/parquet/avroToParquet.avsc")) {
-            schema = new Schema.Parser().parse(IOUtils.toString(inStream, "UTF-8"));
+        try (InputStream inStream = ParquetReaderWriterWithAvro.class.getResourceAsStream(SCHEMA_LOCATION)) {
+            SCHEMA = new Schema.Parser().parse(IOUtils.toString(inStream, "UTF-8"));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read schema file", e);
+            LOGGER.error("Can't read SCHEMA file from {}", SCHEMA_LOCATION);
+            throw new RuntimeException("Can't read SCHEMA file from" + SCHEMA_LOCATION, e);
         }
     }
 
     public static void main(String[] args) throws IOException {
         List<GenericData.Record> sampleData = new ArrayList<>();
 
-        GenericData.Record record = new GenericData.Record(schema);
+        GenericData.Record record = new GenericData.Record(SCHEMA);
         record.put("c1", 1);
         record.put("c2", "someString");
         sampleData.add(record);
 
-        record = new GenericData.Record(schema);
+        record = new GenericData.Record(SCHEMA);
         record.put("c1", 2);
         record.put("c2", "otherString");
         sampleData.add(record);
@@ -67,7 +73,7 @@ public class ParquetReaderWriterWithAvro {
     public void writeToParquet(List<GenericData.Record> recordsToWrite, Path fileToWrite) throws IOException {
         try (ParquetWriter<GenericData.Record> writer = AvroParquetWriter
                 .<GenericData.Record>builder(fileToWrite)
-                .withSchema(schema)
+                .withSchema(SCHEMA)
                 .withConf(new Configuration())
                 .withCompressionCodec(CompressionCodecName.SNAPPY)
                 .build()) {
